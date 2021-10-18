@@ -1,0 +1,4 @@
+mysqlclient==2.0.3
+django-admin-interface==0.16.3
+psycopg2==2.8.6
+web: gunicorn nep_college.wsgi --log-file=-
