@@ -6,17 +6,14 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    # path('admin/d/h/v/d/u/g/o/d/h/e/l/p/m/e/a/l/w/a/y/s/a/m/e/n', admin.site.urls),
+    # path('admin/', admin.site.urls),
+    path('admin/d/h/v/d/u/g/o/d/h/e/l/p/m/e/a/l/w/a/y/s/a/m/e/n', admin.site.urls),
     path('',include('accounts.urls')),
    # path('',include('financee.urls')),
     path('',include('mails.urls')),
     path('',include('incomestatement.urls')),
     path('',include('sms.urls')),
     path('',include('fees.urls')),
-    path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}), 
-    path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), 
-
+    
 ]
 urlpatterns=urlpatterns+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
- 
