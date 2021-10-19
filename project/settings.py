@@ -95,7 +95,7 @@ TEMPLATES = [
         },
     },
 ]
-# account_user
+
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
