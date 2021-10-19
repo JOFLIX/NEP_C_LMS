@@ -1,2 +1,3 @@
 release: python manage.py migrate
-web: gunicorn <your_project_name>.wsgi --log-file -
+release: python manage.py syncdb
+web: gunicorn nep_college.wsgi --log-file -
