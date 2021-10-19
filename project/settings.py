@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os 
 from pathlib import Path
 import django_heroku
-
+import django_heroku
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -74,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -107,6 +109,7 @@ DATABASES = {
     }
 }
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -163,7 +166,6 @@ EMAIL_HOST_PASSWORD = 'NEP7777.'
 ACCOUNT_EMAIL_VERIFICATION='none'
 
 
-django_heroku.settings(locals())
 
 
 
@@ -185,7 +187,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 '''
 [
     {
-        "AllowedHeaders": [
+        "AlloweSTATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'dHeaders": [
             "*"
         ],
         "AllowedMethods": [
@@ -202,3 +204,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 #https://accounts.google.com/b/0/DisplayUnlockCaptcha
+django_heroku.settings(locals())
