@@ -12,23 +12,22 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os 
 from pathlib import Path
 import django_heroku
-
-
+import dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
+
 SECRET_KEY = 'eo1wxzytp#$0=6xed9z7_du=t1(a%d%%$##%%^^o&&&^%$$%^^^&&**(*&&^^%$###$woo23%^^&&**((((p0k5obwvq_sqq@k9k1s'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['nepcollege.herokuapp.com']
+ALLOWED_HOSTS = ['.localhost', '.herokuapp.com', '.127.0.0.1']
 
 #security after https is configured in my server
 #CSRF_COOKIE_SECURE =True # carefure
@@ -68,6 +67,7 @@ AUTH_USER_MODEL = 'accounts.User'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,6 +75,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -101,28 +102,39 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-'''
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'd4ulca51aj0o9t',
-        'USER': 'xzcwktsmeogmre',
-        'PASSWORD': 'e0d31b858235c46d57e7d1432a9466825d211b69bad70dac426a394bdab4329f',
-        'HOST': 'ec2-34-199-15-136.compute-1.amazonaws.com',
-        'PORT': '5432',
+# DATABASES = {
+    # 'default': {
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        # 'NAME':'project',
+        # 'USER':'nepcollege',
+        # 'PASSWORD':'password',
+        # 'HOST':'',
+        # 'PORT':'',
+    # }
+# }
 
+# development
+if config('MODE')=="dev":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
-'''
+# production
+else:
+    DATABASES['default'] = dj_database_url.config(default='postgres://...')
 
-# Password validation
-# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+db_from_env = dj_database_url.config(conn_max_age=None)
+DATABASES['default'].update(db_from_env)
+
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
+
+# ALLOWED_HOSTS = []
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -157,13 +169,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS=[
+# os.path.join(BASE_DIR,'static')
+# ]
+# STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS=[
-os.path.join(BASE_DIR,'static')
-]
-STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-
-
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
@@ -174,24 +191,23 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'citcmombasaserver@gmail'
-EMAIL_HOST_PASSWORD = 'manage.py'
+EMAIL_HOST_USER = 'nepcollege777@gmail'
+EMAIL_HOST_PASSWORD = 'NEP7777.'
 ACCOUNT_EMAIL_VERIFICATION='none'
 
 
-django_heroku.settings(locals())
 
 
 
 #S3 BUCKETS CONFIG
 
-AWS_ACCESS_KEY_ID = 'AKIAZYJP4XS3WFIYRPU3'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'havardinstitute'
+# AWS_ACCESS_KEY_ID = 'AKIAZYJP4XS3WFIYRPU3'
+# AWS_SECRET_ACCESS_KEY = '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'
+# AWS_STORAGE_BUCKET_NAME = 'havardinstitute'
 
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_S3_FILE_OVERWRITE = False
+# AWS_DEFAULT_ACL = None
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 #STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
@@ -201,7 +217,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 '''
 [
     {
-        "AllowedHeaders": [
+        "AlloweSTATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'dHeaders": [
             "*"
         ],
         "AllowedMethods": [
@@ -218,3 +234,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 #https://accounts.google.com/b/0/DisplayUnlockCaptcha
+# Configure Django App for Heroku.
+django_heroku.settings(locals())
