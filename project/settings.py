@@ -26,7 +26,7 @@ SECRET_KEY = 'eo1wxzytp#$0=6xed9z7_du=t1(a%d%%$##%%^^o&&&^%$$%^^^&&**(*&&^^%$###
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.localhost', '.herokuapp.com', '.127.0.0.1']
 
 #security after https is configured in my server
 #CSRF_COOKIE_SECURE =True # carefure
