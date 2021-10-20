@@ -12,14 +12,12 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os 
 from pathlib import Path
 import django_heroku
-import django_heroku
 import dj_database_url
-
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
+# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -28,7 +26,7 @@ SECRET_KEY = 'eo1wxzytp#$0=6xed9z7_du=t1(a%d%%$##%%^^o&&&^%$$%^^^&&**(*&&^^%$###
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://nepcoll.herokuapp.com/']
+ALLOWED_HOSTS = []
 
 #security after https is configured in my server
 #CSRF_COOKIE_SECURE =True # carefure
@@ -68,6 +66,7 @@ AUTH_USER_MODEL = 'accounts.User'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,7 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -114,6 +113,42 @@ DATABASES = {
     }
 }
 
+# if config('MODE')=="dev":
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             # 'NAME': BASE_DIR / 'db.sqlite3',
+#             'NAME': 'nepcollege',
+#             'USER': 'postgres',
+#             'PASSWORD': '',
+#             'HOST': 'localhost',
+#             'PORT': '',
+#         }
+#     }
+# # production
+# else:
+#    DATABASES = {
+
+#        'default': {
+#             'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#             'NAME': BASE_DIR / 'db.sqlite3',
+#             # 'NAME':'project',
+#             # 'USER':'nepcollege',
+#             # 'PASSWORD':'password',
+#             # 'HOST':'',
+#             # 'PORT':'',
+#        }
+#        # dj_database_url.config(
+#        #     default=config('DATABASE_URL')
+
+#        # )
+#    }
+
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+
+# ALLOWED_HOSTS = []
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -149,13 +184,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# STATIC_URL = '/static/'
+# STATICFILES_DIRS=[
+# os.path.join(BASE_DIR,'static')
+# ]
+# STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS=[
-os.path.join(BASE_DIR,'static')
-]
-STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-
-
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 MEDIA_URL='/media/'
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')
@@ -209,4 +249,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 
 #https://accounts.google.com/b/0/DisplayUnlockCaptcha
+# Configure Django App for Heroku.
 django_heroku.settings(locals())
